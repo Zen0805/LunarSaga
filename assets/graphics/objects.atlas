@@ -1,0 +1,48 @@
+
+objects.png
+size: 256, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+house/house1
+  rotate: false
+  xy: 2, 38
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+low_tree/tree1
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+player/PlayerModel
+  rotate: false
+  xy: 86, 50
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+water_tower/watertoweranim0
+  rotate: false
+  xy: 86, 70
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+water_tower/watertoweranim1
+  rotate: false
+  xy: 138, 70
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+water_tower/watertoweranim2
+  rotate: false
+  xy: 190, 70
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

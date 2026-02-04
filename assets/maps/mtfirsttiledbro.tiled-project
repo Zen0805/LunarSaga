@@ -1,0 +1,50 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "id": 1,
+            "name": "ObjectType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "UNDEFINED",
+                "PLAYER",
+                "PROP"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "color",
+                    "type": "color",
+                    "value": ""
+                },
+                {
+                    "name": "dimension",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Prop",
+            "type": "class",
+            "useAs": [
+                "property",
+                "tile",
+                "project"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,65 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "main.tmx",
+    "expandedProjectPaths": [
+        "overw",
+        ".",
+        "overw/object"
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "main.tmx": {
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 150,
+                "y": 212.33333333333331
+            }
+        },
+        "overw/object/object.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "overw/tiled0.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "overw/tiled_extruded.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        }
+    },
+    "frame.defaultDuration": 150,
+    "last.imagePath": "E:/JavaGProject/assets/maps/overw",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "main.tmx",
+        "overw/object/object.tsx",
+        "overw/tiled0.tsx",
+        "overw/tiled_extruded.tsx"
+    ],
+    "project": "mtfirsttiledbro.tiled-project",
+    "property.type": "Prop",
+    "recentFiles": [
+        "overw/tiled_extruded.tsx",
+        "overw/tiled0.tsx",
+        "overw/object/object.tsx",
+        "main.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 8,
+    "tileset.spacing": 16,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.type": 0
+}
