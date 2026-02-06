@@ -40,3 +40,15 @@ assets/ # game assets (textures, atlases, sounds, etc.)
 core/ # shared game logic (main gameplay code)
 lwjgl3/ # desktop launcher (LWJGL3 backend)
 utils/ # helper tools/scripts (optional)
+
+---
+
+## Development Notes
+This repo is used as a learning journal for libGDX: each feature is implemented step-by-step and cleaned up over time.
+I try to keep commits small and meaningful for easier tracking and future reporting.
+
+---
+
+## Credits
+Built with libGDX.
+Initial structure inspired by a libGDX tutorial workflow; implementation is gradually modified and expanded.
