@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public enum AtlasAsset implements Asset<TextureAtlas> {
 
-    OBJECT("objects.atlas");
+    OBJECTS("objects.atlas");
 
     private final AssetDescriptor<TextureAtlas> descriptor;
 
@@ -14,7 +14,6 @@ public enum AtlasAsset implements Asset<TextureAtlas> {
         this.descriptor = new AssetDescriptor<>("graphics/" +  atlasName, TextureAtlas.class);
 
     }
-
 
     @Override
     public AssetDescriptor<TextureAtlas> getDescriptor() {

@@ -1,9 +1,6 @@
 package com.github.zen05.lunarsaga;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +12,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.zen05.lunarsaga.asset.AssetService;
+import com.github.zen05.lunarsaga.screen.LoadingScreen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +30,7 @@ public class GdxGame extends Game {
     private AssetService assetService;
     private GLProfiler glProfiler;
     private FPSLogger fpsLogger;
+    private InputMultiplexer inputMultiplexer;
 
     private final Map<Class<? extends Screen>, Screen> screenCache = new HashMap<>();
 
@@ -39,6 +38,9 @@ public class GdxGame extends Game {
     public void create() {
 
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+        this.inputMultiplexer = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
@@ -50,8 +52,8 @@ public class GdxGame extends Game {
 
         this.fpsLogger = new FPSLogger();
 
-        addScreen(new GameScreen(this));
-        setScreen(GameScreen.class);
+        addScreen(new LoadingScreen(this, assetService));
+        setScreen(LoadingScreen.class);
 
     }
 
@@ -66,6 +68,12 @@ public class GdxGame extends Game {
     public void addScreen(Screen screen) {
 
         screenCache.put(screen.getClass(), screen);
+
+    }
+
+    public void removeScreen(Screen screen) {
+
+        screenCache.remove(screen.getClass());
 
     }
 
@@ -91,6 +99,7 @@ public class GdxGame extends Game {
 
         Gdx.graphics.setTitle("LunarSaga - Draw Calls: " + glProfiler.getDrawCalls());
         fpsLogger.log();
+
     }
 
     @Override
@@ -127,4 +136,18 @@ public class GdxGame extends Game {
         return this.assetService;
 
     }
+
+    public void setInputProcessor(InputProcessor... processors) {
+
+        inputMultiplexer.clear();
+        if (inputMultiplexer == null) return;
+
+        for (InputProcessor processor : processors) {
+
+            inputMultiplexer.addProcessor(processor);
+
+        }
+
+    }
+
 }

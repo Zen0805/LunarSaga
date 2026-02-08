@@ -5,19 +5,24 @@
     },
     "activeFile": "main.tmx",
     "expandedProjectPaths": [
-        "overw",
+        "overw/object",
         ".",
-        "overw/object"
+        "overw"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "main.tmx": {
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 2,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 150,
-                "y": 212.33333333333331
+                "x": 238.5,
+                "y": 207.5
             }
+        },
+        "object.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
         },
         "overw/object/object.tsx": {
             "dynamicWrapping": true,
@@ -33,26 +38,39 @@
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 2
+        },
+        "tiled0.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "tiled_extruded.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
         }
     },
     "frame.defaultDuration": 150,
-    "last.imagePath": "E:/JavaGProject/assets/maps/overw",
+    "last.imagePath": "E:/JavaGProject/LunarSaga/assets/maps",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
         "main.tmx",
-        "overw/object/object.tsx",
-        "overw/tiled0.tsx",
-        "overw/tiled_extruded.tsx"
+        "object.tsx",
+        "tiled0.tsx",
+        "tiled_extruded.tsx"
     ],
     "project": "mtfirsttiledbro.tiled-project",
-    "property.type": "Prop",
+    "property.type": "float",
     "recentFiles": [
+        "tiled_extruded.tsx",
+        "tiled0.tsx",
+        "object.tsx",
+        "main.tmx",
         "overw/tiled_extruded.tsx",
         "overw/tiled0.tsx",
-        "overw/object/object.tsx",
-        "main.tmx"
+        "overw/object/object.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 8,

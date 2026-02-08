@@ -3,13 +3,18 @@ package com.github.zen05.lunarsaga.tiled;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.github.zen05.lunarsaga.GdxGame;
 import com.github.zen05.lunarsaga.asset.AssetService;
+import com.github.zen05.lunarsaga.asset.AtlasAsset;
+import com.github.zen05.lunarsaga.component.Controller;
 import com.github.zen05.lunarsaga.component.Graphic;
+import com.github.zen05.lunarsaga.component.Move;
 import com.github.zen05.lunarsaga.component.Transform;
 
 public class TiledAshleyConfigurator {
@@ -38,8 +43,28 @@ public class TiledAshleyConfigurator {
             tileMapObject.getScaleX(), tileMapObject.getScaleY(),
             entity
         );
+        addEntityController(tileMapObject, entity);
+        addEntityMove(tile, entity);
 
         this.engine.addEntity(entity);
+
+    }
+
+    private void addEntityMove(TiledMapTile tile, Entity entity) {
+
+        float speed = tile.getProperties().get("speed", 0f, Float.class);
+        if (speed == 0f) return;
+
+        entity.add(new Move(speed));
+
+    }
+
+    private void addEntityController(TiledMapTileMapObject tileMapObject, Entity entity){
+
+        boolean controller = tileMapObject.getProperties().get("controller", false, Boolean.class);
+        if (!controller) return;
+
+        entity.add(new Controller());
 
     }
 
@@ -62,6 +87,16 @@ public class TiledAshleyConfigurator {
     }
 
     private TextureRegion getTextureRegion(TiledMapTile tile){
+
+        String atlasAssetStr = tile.getProperties().get("atlasAsset", AtlasAsset.OBJECTS.name(), String.class);
+        AtlasAsset atlasAsset = AtlasAsset.valueOf(atlasAssetStr);
+        TextureAtlas textureAtlas = this.assetService.get(atlasAsset);
+        FileTextureData textureData = (FileTextureData) tile.getTextureRegion().getTexture().getTextureData();
+        String atlasKey = textureData.getFileHandle().nameWithoutExtension();
+        TextureRegion region = textureAtlas.findRegion(atlasKey + "/" + atlasKey);
+        if(region != null){
+            return region;
+        }
 
         return tile.getTextureRegion();
 

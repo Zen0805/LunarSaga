@@ -4,25 +4,25 @@ size: 256, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-house/house1
+house/house
   rotate: false
   xy: 2, 38
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-low_tree/tree1
-  rotate: false
-  xy: 2, 2
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-player/PlayerModel
+player/player
   rotate: false
   xy: 86, 50
   size: 16, 16
   orig: 16, 16
+  offset: 0, 0
+  index: -1
+tree/tree
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 water_tower/watertoweranim0
