@@ -1,47 +1,341 @@
 
 objects.png
-size: 256, 128
+size: 512, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 house/house
   rotate: false
-  xy: 2, 38
+  xy: 2, 146
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-player/player
+player/idle_down
   rotate: false
-  xy: 86, 50
-  size: 16, 16
-  orig: 16, 16
+  xy: 138, 194
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
-  index: -1
+  index: 0
+player/idle_down
+  rotate: false
+  xy: 2, 6
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/idle_down
+  rotate: false
+  xy: 174, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/idle_down
+  rotate: false
+  xy: 210, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/idle_down
+  rotate: false
+  xy: 246, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/idle_down
+  rotate: false
+  xy: 282, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+player/idle_down
+  rotate: false
+  xy: 318, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+player/idle_left
+  rotate: false
+  xy: 354, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/idle_left
+  rotate: false
+  xy: 390, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/idle_left
+  rotate: false
+  xy: 426, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/idle_left
+  rotate: false
+  xy: 462, 194
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/idle_left
+  rotate: false
+  xy: 54, 110
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/idle_left
+  rotate: false
+  xy: 54, 74
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+player/idle_left
+  rotate: false
+  xy: 54, 38
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+player/idle_right
+  rotate: false
+  xy: 138, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/idle_right
+  rotate: false
+  xy: 174, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/idle_right
+  rotate: false
+  xy: 210, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/idle_right
+  rotate: false
+  xy: 246, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/idle_right
+  rotate: false
+  xy: 282, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/idle_right
+  rotate: false
+  xy: 318, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+player/idle_right
+  rotate: false
+  xy: 354, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+player/idle_up
+  rotate: false
+  xy: 390, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/walk_down
+  rotate: false
+  xy: 462, 158
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/walk_down
+  rotate: false
+  xy: 38, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/walk_down
+  rotate: false
+  xy: 74, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/walk_down
+  rotate: false
+  xy: 90, 142
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/walk_down
+  rotate: false
+  xy: 90, 106
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/walk_left
+  rotate: false
+  xy: 90, 70
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/walk_left
+  rotate: false
+  xy: 126, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/walk_left
+  rotate: false
+  xy: 162, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/walk_left
+  rotate: false
+  xy: 198, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/walk_left
+  rotate: false
+  xy: 234, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/walk_right
+  rotate: false
+  xy: 270, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/walk_right
+  rotate: false
+  xy: 306, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/walk_right
+  rotate: false
+  xy: 342, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/walk_right
+  rotate: false
+  xy: 378, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/walk_right
+  rotate: false
+  xy: 414, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/walk_up
+  rotate: false
+  xy: 450, 122
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+player/walk_up
+  rotate: false
+  xy: 162, 86
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+player/walk_up
+  rotate: false
+  xy: 198, 86
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+player/walk_up
+  rotate: false
+  xy: 234, 86
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+player/walk_up
+  rotate: false
+  xy: 270, 86
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+player/walk_up
+  rotate: false
+  xy: 306, 86
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
 tree/tree
   rotate: false
-  xy: 2, 2
+  xy: 426, 158
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 water_tower/watertoweranim0
   rotate: false
-  xy: 86, 70
+  xy: 2, 94
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 water_tower/watertoweranim1
   rotate: false
-  xy: 138, 70
+  xy: 86, 178
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 water_tower/watertoweranim2
   rotate: false
-  xy: 190, 70
+  xy: 2, 42
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

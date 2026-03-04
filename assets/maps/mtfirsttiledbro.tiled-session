@@ -5,18 +5,18 @@
     },
     "activeFile": "main.tmx",
     "expandedProjectPaths": [
-        "overw/object",
         ".",
+        "overw/object",
         "overw"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "main.tmx": {
-            "scale": 2,
-            "selectedLayer": 4,
+            "scale": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 238.5,
-                "y": 207.5
+                "x": 197.66666666666666,
+                "y": 173
             }
         },
         "object.tsx": {
@@ -51,7 +51,7 @@
         }
     },
     "frame.defaultDuration": 150,
-    "last.imagePath": "E:/JavaGProject/LunarSaga/assets/maps",
+    "last.imagePath": "E:/JavaGProject/LunarSaga/assets_raw/objects/player",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
