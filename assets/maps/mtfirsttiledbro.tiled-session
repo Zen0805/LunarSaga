@@ -5,9 +5,9 @@
     },
     "activeFile": "main.tmx",
     "expandedProjectPaths": [
+        "overw",
         ".",
-        "overw/object",
-        "overw"
+        "overw/object"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {

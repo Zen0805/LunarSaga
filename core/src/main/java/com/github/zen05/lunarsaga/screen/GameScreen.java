@@ -9,10 +9,7 @@ import com.github.zen05.lunarsaga.GdxGame;
 import com.github.zen05.lunarsaga.asset.MapAsset;
 import com.github.zen05.lunarsaga.input.GameControllerState;
 import com.github.zen05.lunarsaga.input.KeyboardController;
-import com.github.zen05.lunarsaga.system.AnimationSystem;
-import com.github.zen05.lunarsaga.system.ControllerSystem;
-import com.github.zen05.lunarsaga.system.MoveSystem;
-import com.github.zen05.lunarsaga.system.RenderSystem;
+import com.github.zen05.lunarsaga.system.*;
 import com.github.zen05.lunarsaga.tiled.TiledAshleyConfigurator;
 import com.github.zen05.lunarsaga.tiled.TiledService;
 
@@ -36,6 +33,8 @@ public class GameScreen extends ScreenAdapter {
 
         this.engine.addSystem(new ControllerSystem());
         this.engine.addSystem(new MoveSystem());
+        this.engine.addSystem(new FsmSystem());
+        this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
         this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
 

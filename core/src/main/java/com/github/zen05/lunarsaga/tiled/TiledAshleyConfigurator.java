@@ -47,6 +47,7 @@ public class TiledAshleyConfigurator {
         addEntityMove(tile, entity);
         addEntityAnimation(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
+        entity.add(new Fsm(entity));
 
         this.engine.addEntity(entity);
 
@@ -55,12 +56,7 @@ public class TiledAshleyConfigurator {
     private void addEntityAnimation(TiledMapTile tile, Entity entity) {
 
         String animationStr = tile.getProperties().get("animation", "", String.class);
-        if (animationStr.isBlank()) {
-            System.out.println("animation is blank");
-            return;
-        }
-
-        System.out.println("animation: " + animationStr);
+        if (animationStr.isBlank()) return;
 
         AnimationType animationType = AnimationType.valueOf(animationStr);
         String atlasAssetStr = tile.getProperties().get("atlasAsset", "OBJECTS", String.class);
