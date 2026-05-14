@@ -9,13 +9,19 @@
    <property name="controller" type="bool" value="true"/>
    <property name="speed" type="float" value="4"/>
   </properties>
-  <image source="../../assets_raw/objects/player/player.png" width="32" height="32"/>
+  <image source="object/player.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="12.8125" y="20.0625" width="8.1875" height="3.9375"/>
+  </objectgroup>
  </tile>
  <tile id="3">
   <properties>
    <property name="atlasAsset" value="OBJECTS"/>
   </properties>
   <image source="object/tree.png" width="32" height="32"/>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="1.17162" y="3.22197" width="29.7788" height="23.3349"/>
+  </objectgroup>
  </tile>
  <tile id="8">
   <properties>
@@ -54,6 +60,6 @@
    <property name="controller" type="bool" value="true"/>
    <property name="speed" type="float" value="4"/>
   </properties>
-  <image source="../../assets_raw/objects/player/idle_down_00.png" width="32" height="32"/>
+  <image source="object/idle_down_00.png" width="32" height="32"/>
  </tile>
 </tileset>

@@ -3,7 +3,9 @@ package com.github.zen05.lunarsaga.input;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,12 +25,15 @@ public class KeyboardController extends InputAdapter{
     private final boolean[] commandState;
     private final Map<Class<? extends ControllerState>, ControllerState> stateCache;
     private ControllerState activeState;
+    private final Viewport viewport;
+    private final Vector2 tempVec = new Vector2();
 
-    public KeyboardController(Class<? extends ControllerState> initialState, Engine engine) {
+    public KeyboardController(Class<? extends ControllerState> initialState, Engine engine, Viewport viewport) {
 
         this.stateCache = new HashMap<>();
         this.activeState = null;
         this.commandState = new boolean[Command.values().length];
+        this.viewport = viewport;
 
         this.stateCache.put(IdleControllerState.class, new IdleControllerState());
         this.stateCache.put(GameControllerState.class, new GameControllerState(engine));
@@ -75,6 +80,35 @@ public class KeyboardController extends InputAdapter{
         this.commandState[command.ordinal()] = false;
         this.activeState.keyUp(command);
         return true;
+    }
+
+    private void unproject(int screenX, int screenY) {
+        tempVec.set(screenX, screenY);
+        viewport.unproject(tempVec);
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        unproject(screenX, screenY);
+        return this.activeState.touchDown(tempVec.x, tempVec.y, pointer, button);
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        unproject(screenX, screenY);
+        return this.activeState.touchUp(tempVec.x, tempVec.y, pointer, button);
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        unproject(screenX, screenY);
+        return this.activeState.touchDragged(tempVec.x, tempVec.y, pointer);
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        unproject(screenX, screenY);
+        return this.activeState.mouseMoved(tempVec.x, tempVec.y);
     }
 
 }

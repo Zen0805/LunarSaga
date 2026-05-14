@@ -8,4 +8,9 @@ public interface ControllerState {
 
     }
 
+    default boolean touchDown(float worldX, float worldY, int pointer, int button) { return false; }
+    default boolean touchUp(float worldX, float worldY, int pointer, int button) { return false; }
+    default boolean touchDragged(float worldX, float worldY, int pointer) { return false; }
+    default boolean mouseMoved(float worldX, float worldY) { return false; }
+
 }

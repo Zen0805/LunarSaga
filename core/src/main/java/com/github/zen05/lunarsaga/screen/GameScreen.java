@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.zen05.lunarsaga.GdxGame;
 import com.github.zen05.lunarsaga.asset.MapAsset;
@@ -20,24 +22,30 @@ public class GameScreen extends ScreenAdapter {
     private final Engine engine;
     private final TiledService tiledService;
     private final TiledAshleyConfigurator tiledAshleyConfigurator;
-    private final KeyboardController  keyboardController;
+    private final KeyboardController keyboardController;
     private final GdxGame game;
+    private final World physicWorld;
 
-    public GameScreen(GdxGame game){
-
+    public GameScreen(GdxGame game) {
         this.game = game;
-        this.tiledService = new TiledService(game.getAssetService());
+
+        // Không có trọng lực (top-down game)
+        this.physicWorld = new World(new Vector2(0f, 0f), true);
+
+        this.tiledService = new TiledService(game.getAssetService(), this.physicWorld);
         this.engine = new Engine();
-        this.tiledAshleyConfigurator= new TiledAshleyConfigurator(this.engine, game.getAssetService());
-        this.keyboardController = new KeyboardController(GameControllerState.class, engine);
+        this.tiledAshleyConfigurator = new TiledAshleyConfigurator(this.engine, game.getAssetService(),
+                this.physicWorld);
+        this.keyboardController = new KeyboardController(GameControllerState.class, engine, game.getViewport());
 
         this.engine.addSystem(new ControllerSystem());
-        this.engine.addSystem(new MoveSystem());
+        this.engine.addSystem(new PhysicSystem(this.physicWorld)); // Thay thế MoveSystem
         this.engine.addSystem(new FsmSystem());
         this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
-        this.engine.addSystem(new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera()));
-
+        this.engine.addSystem(new ProjectileSystem(game.getAssetService(), this.physicWorld));
+        this.engine.addSystem(
+                new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), game.getAssetService()));
     }
 
     @Override
@@ -51,7 +59,6 @@ public class GameScreen extends ScreenAdapter {
 
         TiledMap tiledMap = this.tiledService.loadMap(MapAsset.MAIN);
         this.tiledService.setMap(tiledMap);
-
     }
 
     @Override
@@ -61,27 +68,18 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-
         delta = Math.min(delta, 1 / 30f);
         this.engine.update(delta);
-
     }
 
     @Override
     public void dispose() {
-
-        for(EntitySystem system : this.engine.getSystems()){
-
-            if(system instanceof Disposable){
-
-                Disposable disposableSystem = (Disposable) system;
-
-                disposableSystem.dispose();
-
+        for (EntitySystem system : this.engine.getSystems()) {
+            if (system instanceof Disposable) {
+                ((Disposable) system).dispose();
             }
-
         }
-
+        this.physicWorld.dispose();
     }
 
 }

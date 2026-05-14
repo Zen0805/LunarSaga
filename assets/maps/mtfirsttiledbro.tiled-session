@@ -6,8 +6,8 @@
     "activeFile": "main.tmx",
     "expandedProjectPaths": [
         "overw",
-        ".",
-        "overw/object"
+        "overw/object",
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -15,8 +15,8 @@
             "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 197.66666666666666,
-                "y": 173
+                "x": 144,
+                "y": 238
             }
         },
         "object.tsx": {
@@ -58,16 +58,15 @@
     "openFiles": [
         "main.tmx",
         "object.tsx",
-        "tiled0.tsx",
-        "tiled_extruded.tsx"
+        "tiled0.tsx"
     ],
     "project": "mtfirsttiledbro.tiled-project",
     "property.type": "float",
     "recentFiles": [
-        "tiled_extruded.tsx",
         "tiled0.tsx",
         "object.tsx",
         "main.tmx",
+        "tiled_extruded.tsx",
         "overw/tiled_extruded.tsx",
         "overw/tiled0.tsx",
         "overw/object/object.tsx"
