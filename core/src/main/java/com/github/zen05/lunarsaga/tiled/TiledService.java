@@ -25,7 +25,7 @@ public class TiledService {
     private TiledMap currentMap;
 
     private Consumer<TiledMap> mapChangeConsumer;
-    private Consumer<TiledMapTileMapObject> loadObjectConsumer;
+    private Consumer<MapObject> loadObjectConsumer;
 
     public TiledService(AssetService assetService, World physicWorld) {
         this.assetService = assetService;
@@ -44,7 +44,9 @@ public class TiledService {
     public void setMap(TiledMap map) {
         if (this.currentMap != null) {
             this.assetService.unload(this.currentMap.getProperties().get("mapAsset", MapAsset.class));
-            // Xóa tất cả static body thuộc "environment" (tường, cây cối, biên map)
+            // Xóa tất cả body thuộc "environment" (tường, cây cối, biên map).
+            // Lưu ý: Dynamic body của enemy sẽ bị xóa bởi PhysicSystem khi engine.removeEntity()
+            // được gọi trong GameScreen.changeMap() → không cần xóa thủ công ở đây.
             Array<Body> bodies = new Array<>();
             physicWorld.getBodies(bodies);
             for (Body body : bodies) {
@@ -64,11 +66,14 @@ public class TiledService {
 
     private void loadMapContent(TiledMap tiledMap) {
         for (MapLayer layer : tiledMap.getLayers()) {
-            if ("objects".equals(layer.getName())) {
-                loadObjectLayer(layer);
-            } else if ("collision".equals(layer.getName())) {
+            if (!layer.isVisible()) continue; // Bỏ qua layer nếu đã bị tắt con mắt trong Tiled
+
+            if ("collision".equals(layer.getName())) {
                 // Tạo Static Body từ các hình vẽ va chạm trong Tiled
                 loadCollisionLayer(layer);
+            } else if (layer.getObjects().getCount() > 0) {
+                // Load các object (Player, Cây) trên mọi layer có object (objects, Wall_tree, v.v.)
+                loadObjectLayer(layer);
             }
         }
         spawnMapBoundary(tiledMap);
@@ -148,11 +153,7 @@ public class TiledService {
         if (loadObjectConsumer == null) return;
 
         for (MapObject mapObject : objectLayer.getObjects()) {
-            if (mapObject instanceof TiledMapTileMapObject tileMapObject) {
-                loadObjectConsumer.accept(tileMapObject);
-            } else {
-                throw new GdxRuntimeException("Unsupported Object: " + mapObject.getClass().getSimpleName());
-            }
+            loadObjectConsumer.accept(mapObject);
         }
     }
 
@@ -160,7 +161,7 @@ public class TiledService {
         this.mapChangeConsumer = mapChangeConsumer;
     }
 
-    public void setLoadObjectConsumer(Consumer<TiledMapTileMapObject> loadObjectConsumer) {
+    public void setLoadObjectConsumer(Consumer<MapObject> loadObjectConsumer) {
         this.loadObjectConsumer = loadObjectConsumer;
     }
 

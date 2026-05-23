@@ -5,19 +5,97 @@
     },
     "activeFile": "main.tmx",
     "expandedProjectPaths": [
-        "overw",
         "overw/object",
-        "."
+        ".",
+        "overw"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
-        "main.tmx": {
-            "scale": 3,
-            "selectedLayer": 2,
+        "": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/menu.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 144,
-                "y": 238
+                "x": 366.66666666666663,
+                "y": 283.33333333333326
             }
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/menu.tmx#overworld": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 252.75,
+                "y": 133
+            }
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx#overworld": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx#overworld-edit": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx": {
+            "expandedObjectLayers": [
+                6,
+                9,
+                7
+            ],
+            "scale": 2,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 277.75,
+                "y": 137.5
+            }
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx#overworld-edit": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx": {
+            "expandedObjectLayers": [
+                8,
+                7
+            ],
+            "scale": 1.5,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 355.6666666666667,
+                "y": 286.6666666666667
+            }
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx#cave": {
+            "scaleInDock": 1
+        },
+        "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx#overworld": {
+            "scaleInDock": 1
+        },
+        "main.tmx": {
+            "expandedObjectLayers": [
+                4,
+                7,
+                5
+            ],
+            "scale": 11,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 226.3181818181818,
+                "y": 147.9090909090909
+            }
+        },
+        "main_2.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 286.75,
+                "y": 202
+            }
+        },
+        "main_2.tmx#overworld-edit": {
+            "scaleInDock": 1
         },
         "object.tsx": {
             "dynamicWrapping": true,
@@ -41,32 +119,42 @@
         },
         "tiled0.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
-            "scaleInEditor": 2
+            "scaleInDock": 1.5,
+            "scaleInEditor": 5.5
         },
         "tiled_extruded.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 2
         }
     },
     "frame.defaultDuration": 150,
     "last.imagePath": "E:/JavaGProject/LunarSaga/assets_raw/objects/player",
     "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": "3",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
         "main.tmx",
+        "main_2.tmx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx",
         "object.tsx",
-        "tiled0.tsx"
+        "tiled0.tsx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx"
     ],
     "project": "mtfirsttiledbro.tiled-project",
-    "property.type": "float",
+    "property.type": "string",
     "recentFiles": [
+        "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx",
         "tiled0.tsx",
         "object.tsx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx",
+        "main_2.tmx",
         "main.tmx",
         "tiled_extruded.tsx",
+        "E:/Unity/GameDown/legend-of-lua-main/maps/menu.tmx",
         "overw/tiled_extruded.tsx",
         "overw/tiled0.tsx",
         "overw/object/object.tsx"

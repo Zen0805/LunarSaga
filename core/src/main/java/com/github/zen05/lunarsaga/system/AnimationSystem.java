@@ -66,11 +66,27 @@ public class AnimationSystem extends IteratingSystem {
 
         Animation<TextureRegion> animation = animationCache.computeIfAbsent(cacheKey, key -> {
             TextureAtlas textureAtlas = this.assetService.get(atlasAsset);
+
+            // Ưu tiên 1: key đầy đủ có hướng — "bat/idle_down" (Player, enemy có nhiều hướng)
             String combinedKey = atlasKey + "/" + type.getAtlasKey() + "_" + facingDirection.getAtlasKey();
             Array<TextureAtlas.AtlasRegion> regions = textureAtlas.findRegions(combinedKey);
 
+            // Fallback: key không có hướng — "enemies/bat/bat" (enemy chỉ có 1 animation chung)
             if (regions.isEmpty()) {
-                throw new GdxRuntimeException("No regions found for key: " + combinedKey);
+                // Lấy phần cuối của atlasKey (vd: "enemies/bat" → "bat")
+                String shortName = atlasKey.contains("/")
+                        ? atlasKey.substring(atlasKey.lastIndexOf('/') + 1)
+                        : atlasKey;
+                String fallbackKey = atlasKey + "/" + shortName;
+                regions = textureAtlas.findRegions(fallbackKey);
+                com.badlogic.gdx.Gdx.app.log("AnimationSystem",
+                        "Không tìm thấy animation theo hướng: '" + combinedKey
+                        + "'. Dùng fallback: '" + fallbackKey + "'");
+            }
+
+            if (regions.isEmpty()) {
+                throw new GdxRuntimeException("Không tìm thấy animation với key: " + combinedKey
+                        + " hoặc fallback cho: " + atlasKey);
             }
 
             return new Animation<>(FRAME_DURATION, regions);
@@ -78,6 +94,7 @@ public class AnimationSystem extends IteratingSystem {
         animation2D.setAnimation(animation, facingDirection);
 
     }
+
 
     public record CacheKey(
         AtlasAsset atlasAsset,

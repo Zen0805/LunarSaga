@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="2025.12.08" orientation="orthogonal" renderorder="right-down" width="38" height="22" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="14">
+ <tileset firstgid="1" source="tiled0.tsx"/>
+ <tileset firstgid="1441" source="tiled_extruded.tsx"/>
+ <layer id="1" name="Base" width="38" height="22">
+  <data encoding="base64" compression="zlib">
+   eJztlr1uwjAQgO/srkWCDbUrEzNIMPIKfYPu7QMAj0FZusEbwMyP2KBvUOYW1qrdy1nB8uEEx1ZFiCjDp7MV3/mTYzsZAMAggCcEmN8AzIhXByUBcI+GoojnqfacRZ4f4qR4QVNH10zqJ3m1LJcNsU3we0Yz3xex8kB59dHU3LD6uq/mb1peDRHP45E/6zOvIbjfi2ZCOVMPRuQh0TAWfnmaUK8Pyvn04J08qmhYC788jfYqU7tNsZPid0v1C2oPYxSPIeShl5Tu8Tb2vk5btxrl1IktRpHzSFRkxC+1H9AAMj7eRaiXizu2z9tEh9HFw3OQxqm8/kpevZb7e0nHt5x4ub4F5/Sy7928eKk7i5N2f3G+aewPo5fBvl/syWp9LsXL5Ze1l+10zO3qZf4r+PnMg1fId+k/eu0AtEdfnQ==
+  </data>
+ </layer>
+ <layer id="2" name="Objects" width="38" height="22">
+  <data encoding="base64" compression="zlib">
+   eJzt1rEJADAIRFFxeLNNsmKsbfQatbgHwTLwQdBU5Piz4uxy/a+n9dmlu0NVd4cq9sJM7Vtmat8y7EW0B/cRw14Y9sJsueejLfd89AGJNzXN
+  </data>
+ </layer>
+ <objectgroup id="5" name="Enemies">
+  <object id="13" name="test" x="234" y="174">
+   <properties>
+    <property name="ai" value="idle"/>
+    <property name="enemyId" value="bat"/>
+    <property name="type" value="enemy"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="collision">
+  <object id="4" x="0" y="0.25" width="191.5" height="31.5"/>
+  <object id="6" x="0.25" y="-0.25" width="31.75" height="160.25"/>
+  <object id="8" x="1" y="95.5" width="62.75" height="64.5"/>
+  <object id="9" x="0" y="223.75" width="64.25" height="128.25"/>
+  <object id="10" x="0" y="319.25" width="128.5" height="32.5"/>
+  <object id="11" x="192.021" y="0" width="32.6458" height="111.333"/>
+  <object id="12" x="192.063" y="80.0625" width="144.021" height="31.9375"/>
+ </objectgroup>
+ <objectgroup id="3" name="Transitions">
+  <object id="1" name="toMap1" x="-11.7917" y="159.917" width="18.9583" height="63.9583">
+   <properties>
+    <property name="toMap" value="MAIN"/>
+    <property name="toX" type="int" value="28"/>
+    <property name="toY" type="int" value="10"/>
+    <property name="type" value="portal"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

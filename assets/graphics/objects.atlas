@@ -4,184 +4,198 @@ size: 512, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+enemies/bat/bat
+  rotate: false
+  xy: 86, 183
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+enemies/bat/bat
+  rotate: false
+  xy: 2, 11
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
 house/house
   rotate: false
-  xy: 2, 151
+  xy: 2, 171
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 player/idle_down
   rotate: false
-  xy: 138, 199
+  xy: 138, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/idle_down
   rotate: false
-  xy: 2, 11
+  xy: 2, 31
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/idle_down
   rotate: false
-  xy: 174, 199
+  xy: 174, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/idle_down
   rotate: false
-  xy: 210, 199
+  xy: 210, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/idle_down
   rotate: false
-  xy: 246, 199
+  xy: 246, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/idle_down
   rotate: false
-  xy: 282, 199
+  xy: 282, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player/idle_down
   rotate: false
-  xy: 318, 199
+  xy: 318, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 player/idle_left
   rotate: false
-  xy: 354, 199
+  xy: 354, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/idle_left
   rotate: false
-  xy: 390, 199
+  xy: 390, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/idle_left
   rotate: false
-  xy: 426, 199
+  xy: 426, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/idle_left
   rotate: false
-  xy: 462, 199
+  xy: 462, 219
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/idle_left
   rotate: false
-  xy: 54, 115
+  xy: 54, 135
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/idle_left
   rotate: false
-  xy: 54, 79
+  xy: 54, 99
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player/idle_left
   rotate: false
-  xy: 54, 43
+  xy: 54, 63
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 player/idle_right
   rotate: false
-  xy: 138, 163
+  xy: 138, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/idle_right
   rotate: false
-  xy: 174, 163
+  xy: 174, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/idle_right
   rotate: false
-  xy: 210, 163
+  xy: 210, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/idle_right
   rotate: false
-  xy: 246, 163
+  xy: 246, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/idle_right
   rotate: false
-  xy: 282, 163
+  xy: 282, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/idle_right
   rotate: false
-  xy: 318, 163
+  xy: 318, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 player/idle_right
   rotate: false
-  xy: 354, 163
+  xy: 354, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 player/idle_up
   rotate: false
-  xy: 390, 163
+  xy: 390, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/player
   rotate: false
-  xy: 426, 163
+  xy: 426, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 player/walk_down
   rotate: false
-  xy: 38, 7
+  xy: 38, 27
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/walk_down
   rotate: false
-  xy: 74, 7
+  xy: 74, 27
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -209,140 +223,140 @@ player/walk_down
   index: 4
 player/walk_left
   rotate: false
-  xy: 126, 127
+  xy: 126, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/walk_left
   rotate: false
-  xy: 162, 127
+  xy: 126, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/walk_left
   rotate: false
-  xy: 198, 127
+  xy: 162, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/walk_left
   rotate: false
-  xy: 234, 127
+  xy: 126, 75
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/walk_left
   rotate: false
-  xy: 270, 127
+  xy: 162, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/walk_right
   rotate: false
-  xy: 306, 127
+  xy: 198, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/walk_right
   rotate: false
-  xy: 342, 127
+  xy: 162, 75
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/walk_right
   rotate: false
-  xy: 378, 127
+  xy: 198, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/walk_right
   rotate: false
-  xy: 414, 127
+  xy: 234, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/walk_right
   rotate: false
-  xy: 450, 127
+  xy: 198, 75
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/walk_up
   rotate: false
-  xy: 162, 91
+  xy: 234, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 player/walk_up
   rotate: false
-  xy: 198, 91
+  xy: 270, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 player/walk_up
   rotate: false
-  xy: 234, 91
+  xy: 234, 75
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 player/walk_up
   rotate: false
-  xy: 270, 91
+  xy: 270, 111
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 player/walk_up
   rotate: false
-  xy: 306, 91
+  xy: 306, 147
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 player/walk_up
   rotate: false
-  xy: 342, 91
+  xy: 270, 75
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 tree/tree
   rotate: false
-  xy: 462, 163
+  xy: 462, 183
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 water_tower/watertoweranim0
   rotate: false
-  xy: 2, 99
+  xy: 2, 119
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 water_tower/watertoweranim1
   rotate: false
-  xy: 86, 183
+  xy: 86, 203
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 water_tower/watertoweranim2
   rotate: false
-  xy: 2, 47
+  xy: 2, 67
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -356,7 +370,7 @@ weapons/arrow
   index: -1
 weapons/bow
   rotate: false
-  xy: 498, 218
+  xy: 498, 238
   size: 6, 13
   orig: 6, 13
   offset: 0, 0

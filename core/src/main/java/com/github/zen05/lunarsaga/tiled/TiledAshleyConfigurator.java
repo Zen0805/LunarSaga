@@ -2,6 +2,7 @@ package com.github.zen05.lunarsaga.tiled;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,9 +16,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.github.zen05.lunarsaga.GdxGame;
+import com.github.zen05.lunarsaga.ai.EnemyDef;
+import com.github.zen05.lunarsaga.ai.EnemyState;
+
 import com.github.zen05.lunarsaga.asset.AssetService;
 import com.github.zen05.lunarsaga.asset.AtlasAsset;
+import com.github.zen05.lunarsaga.asset.MapAsset;
 import com.github.zen05.lunarsaga.component.*;
 import com.github.zen05.lunarsaga.component.Animation2D.AnimationType;
 import com.github.zen05.lunarsaga.component.Facing.FacingDirection;
@@ -34,7 +40,158 @@ public class TiledAshleyConfigurator {
         this.physicWorld = physicWorld;
     }
 
-    public void onLoadObject(TiledMapTileMapObject tileMapObject) {
+    public void onLoadObject(com.badlogic.gdx.maps.MapObject mapObject) {
+        if (mapObject instanceof TiledMapTileMapObject tileMapObject) {
+            onLoadTileObject(tileMapObject);
+        } else {
+            String type = mapObject.getProperties().get("type", String.class);
+            if ("portal".equals(type)) {
+                createPortal(mapObject);
+            } else if ("enemy".equals(type)) {
+                createEnemy(mapObject);
+            }
+        }
+    }
+
+    private void createPortal(com.badlogic.gdx.maps.MapObject mapObject) {
+        Entity entity = this.engine.createEntity();
+
+        String toMapStr = mapObject.getProperties().get("toMap", String.class);
+        MapAsset toMap = MapAsset.valueOf(toMapStr);
+        int toX = mapObject.getProperties().get("toX", 0, Integer.class);
+        int toY = mapObject.getProperties().get("toY", 0, Integer.class);
+
+        entity.add(new Portal(toMap, toX, toY));
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.setZero();
+
+        Body body = physicWorld.createBody(bodyDef);
+        body.setUserData(entity);
+
+        FixtureDef fixtureDef = TiledPhysics.fixtureDefOf(mapObject, new Vector2(1f, 1f), Vector2.Zero);
+        fixtureDef.isSensor = true; // Là cổng thì phải đi xuyên qua được
+
+        body.createFixture(fixtureDef);
+        fixtureDef.shape.dispose();
+
+        entity.add(new Physic(body));
+        this.engine.addEntity(entity);
+    }
+
+    /**
+     * Sinh ra Entity kẻ địch từ một Point object trong Tiled.
+     * Đọc các thuộc tính: type, enemyId, ai (trạng thái ban đầu).
+     * Entity sẽ có: Enemy (tag), Transform, Physic (Dynamic Body hình tròn),
+     * Move, Animation2D, Facing, Fsm (EnemyState).
+     */
+    private void createEnemy(com.badlogic.gdx.maps.MapObject mapObject) {
+        String enemyId = mapObject.getProperties().get("enemyId", "bat", String.class);
+        String aiStr   = mapObject.getProperties().get("ai", "idle", String.class);
+        float  x       = mapObject.getProperties().get("x", 0f, Float.class);
+        float  y       = mapObject.getProperties().get("y", 0f, Float.class);
+
+        // ── Bước 1: Tra từ điển EnemyDef để lấy thông số mặc định ──────────────
+        // Mô phỏng entity_defs.lua của Legend of Lua: mọi thông số quái đều tập trung
+        // tại 1 nơi duy nhất (EnemyDef.java), không hardcode rải rác khắp nơi.
+        EnemyDef def = EnemyDef.fromId(enemyId);
+
+        // ── Bước 2: Tiled Override (ghi đè từng trường nếu bạn muốn tùy chỉnh) ─
+        // Ví dụ: con dơi bảo vệ rương → đặt thêm Custom Property "leashRange=2" trên Tiled
+        // để nó không bao giờ bay đi xa. Các con không có property đó dùng giá trị EnemyDef.
+        float spriteW      = mapObject.getProperties().get("spriteW",      (float) def.spriteW,  Float.class);
+        float spriteH      = mapObject.getProperties().get("spriteH",      (float) def.spriteH,  Float.class);
+        float bodyRadius   = mapObject.getProperties().get("bodyRadius",   def.bodyRadius,        Float.class);
+        float speed        = mapObject.getProperties().get("speed",        def.speed,             Float.class);
+        float wanderRadius = mapObject.getProperties().get("wanderRadius", def.wanderRadius,      Float.class);
+        float aggroRange   = mapObject.getProperties().get("aggroRange",   def.aggroRange,        Float.class);
+        float deAggroRange = mapObject.getProperties().get("deAggroRange", def.deAggroRange,      Float.class);
+        float leashRange   = mapObject.getProperties().get("leashRange",   def.leashRange,        Float.class);
+
+        // ── Bước 3: Xây dựng Entity ─────────────────────────────────────────────
+        Entity entity = this.engine.createEntity();
+
+        // --- Transform ---
+        Transform transform = addEntityTransform(x, y, 1, (int)spriteW, (int)spriteH, 1f, 1f, entity);
+
+        // --- Box2D Dynamic Body (hình tròn, phù hợp với quái bay/bò) ---
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(transform.getPosition());
+        bodyDef.fixedRotation = true;
+
+        Body body = physicWorld.createBody(bodyDef);
+        body.setUserData(entity);
+
+        CircleShape circle = new CircleShape();
+        circle.setRadius(bodyRadius);
+        circle.setPosition(new Vector2(
+                transform.getSize().x * 0.5f,
+                transform.getSize().y * 0.5f
+        ));
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circle;
+        fixtureDef.density = 1f;
+        body.createFixture(fixtureDef);
+        circle.dispose();
+
+        entity.add(new Physic(body));
+
+        // --- Components: dùng thông số từ EnemyDef (đã override bởi Tiled nếu có) ---
+        Enemy enemyComponent = new Enemy(enemyId, wanderRadius, aggroRange, deAggroRange, leashRange);
+        enemyComponent.setSpawnPoint(transform.getPosition().x, transform.getPosition().y);
+        entity.add(enemyComponent);
+        entity.add(new Move(speed));
+        entity.add(new Facing(FacingDirection.DOWN));
+
+        // Animation: atlasKey = "enemies/bat" → AnimationSystem tìm "enemies/bat/idle_down",
+        // "enemies/bat/walk_down", v.v. Nếu kẻ địch chỉ có animation chung (không phân hướng),
+        // AnimationSystem sẽ fallback sang key "{atlasKey}/{type}" (sau khi ta cập nhật nó).
+        String atlasKey = "enemies/" + enemyId; // "enemies/bat"
+        entity.add(new Animation2D(
+                AtlasAsset.OBJECTS,
+                atlasKey,
+                AnimationType.IDLE,
+                com.badlogic.gdx.graphics.g2d.Animation.PlayMode.LOOP,
+                0.15f
+        ));
+
+        // Graphic: dùng frame 0 của key "enemies/bat/bat" trong atlas
+        TextureAtlas atlas = this.assetService.get(AtlasAsset.OBJECTS);
+        com.badlogic.gdx.graphics.g2d.TextureRegion firstFrame = atlas.findRegion(atlasKey + "/" + enemyId, 0);
+        if (firstFrame == null) firstFrame = atlas.findRegion(atlasKey + "/" + enemyId);
+        if (firstFrame == null && !atlas.getRegions().isEmpty()) firstFrame = atlas.getRegions().first();
+        entity.add(new Graphic(
+                firstFrame,
+                com.badlogic.gdx.graphics.Color.WHITE.cpy()
+        ));
+
+        // --- FSM: Dùng EnemyState (AI), KHÔNG phải AnimationState (Player) ---
+        com.badlogic.gdx.ai.fsm.DefaultStateMachine<Entity, EnemyState> stateMachine =
+                new com.badlogic.gdx.ai.fsm.DefaultStateMachine<>(entity, EnemyState.IDLE);
+        // Nếu Tiled cấu hình ai=wander thì bắt đầu ở trạng thái đi lung tung
+        if ("wander".equalsIgnoreCase(aiStr)) {
+            stateMachine.changeState(EnemyState.WANDER);
+        }
+        entity.add(new EnemyFsm(stateMachine));
+
+        this.engine.addEntity(entity);
+        com.badlogic.gdx.Gdx.app.log("TiledAshleyConfigurator",
+                "Đã sinh ra [" + enemyId + "] tại (" + x + ", " + y + ") | AI: " + aiStr
+                + " | aggro=" + aggroRange + " leash=" + leashRange + " speed=" + speed);
+    }
+
+    private void onLoadTileObject(TiledMapTileMapObject tileMapObject) {
+        // Trường phái Lai: Nếu object này là Player (controller=true) và Player đã tồn tại → bỏ qua
+        boolean isController = tileMapObject.getProperties().get("controller", false, Boolean.class);
+        if (isController && playerAlreadyExists()) {
+            com.badlogic.gdx.Gdx.app.log("TiledAshleyConfigurator",
+                    "Đã có Player trong Engine. Bỏ qua hình nộm Player trên Tiled.");
+            return;
+        }
+
         Entity entity = this.engine.createEntity();
         TiledMapTile tile = tileMapObject.getTile();
         TextureRegion textureRegion = getTextureRegion(tile);
@@ -47,7 +204,7 @@ public class TiledAshleyConfigurator {
                 tileMapObject.getScaleX(), tileMapObject.getScaleY(),
                 entity
         );
-        addEntityPhysic(tile.getObjects(), transform, entity);
+        addEntityPhysic(tile, tile.getObjects(), transform, entity);
         addEntityController(tileMapObject, entity);
         addEntityMove(tile, entity);
         addEntityAnimation(tile, entity);
@@ -58,14 +215,24 @@ public class TiledAshleyConfigurator {
     }
 
     /**
+     * Kiểm tra xem Player đã tồn tại trong Engine chưa.
+     * Dùng để tránh spawn thêm Player khi load map mới (Trường phái Lai).
+     */
+    private boolean playerAlreadyExists() {
+        return engine.getEntitiesFor(Family.all(Player.class).get()).size() > 0;
+    }
+
+    /**
      * Tạo Box2D Dynamic Body cho entity từ hình học va chạm trong Tile.
      * Nếu tile không có collision object nào, không gắn Physic component.
      * Tham khảo: mystictutorial / TiledAshleyConfigurator.java#addEntityPhysic()
      */
-    private void addEntityPhysic(MapObjects mapObjects, Transform transform, Entity entity) {
+    private void addEntityPhysic(TiledMapTile tile, MapObjects mapObjects, Transform transform, Entity entity) {
+        String bodyTypeStr = tile.getProperties().get("bodyType", "DynamicBody", String.class);
+        BodyDef.BodyType bodyType = BodyDef.BodyType.valueOf(bodyTypeStr);
+
         BodyDef bodyDef = new BodyDef();
-        // Nếu là Player hoặc có Move component thì thường là DynamicBody
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = bodyType;
         bodyDef.position.set(transform.getPosition());
         bodyDef.fixedRotation = true;
 
@@ -121,6 +288,8 @@ public class TiledAshleyConfigurator {
         boolean controller = tileMapObject.getProperties().get("controller", false, Boolean.class);
         if (!controller) return;
         entity.add(new Controller());
+        entity.add(new CameraFollow()); // Nhân vật nào được điều khiển thì camera sẽ bám theo nhân vật đó
+        entity.add(new Player());       // Gắn tag Player để nhận diện khi chuyển map
     }
 
     private Transform addEntityTransform(

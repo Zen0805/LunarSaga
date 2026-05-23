@@ -35,7 +35,10 @@ public class PhysicSystem extends IteratingSystem implements EntityListener {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        engine.addEntityListener(getFamily(), this);
+        // Thay vì nghe getFamily() (đòi hỏi cả Physic và Transform),
+        // ta chỉ cần nghe những Entity có Physic để dọn dẹp Box2D Body khi chúng bị xóa.
+        // Điều này sửa lỗi Portal (không có Transform) không bị dọn dẹp Body khi chuyển map.
+        engine.addEntityListener(Family.all(Physic.class).get(), this);
     }
 
     @Override
