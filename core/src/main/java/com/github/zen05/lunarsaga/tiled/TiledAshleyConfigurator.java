@@ -146,6 +146,11 @@ public class TiledAshleyConfigurator {
         entity.add(new Move(speed));
         entity.add(new Facing(FacingDirection.DOWN));
 
+        // --- Máu & iFrames: đọc từ EnemyDef, có thể override bằng Tiled property "hp" ---
+        int hp = mapObject.getProperties().get("hp", def.hp, Integer.class);
+        entity.add(new Health(hp));
+        entity.add(new Damageable(0.6f)); // 0.6 giây bất tử sau khi trúng đòn
+
         // Animation: atlasKey = "enemies/bat" → AnimationSystem tìm "enemies/bat/idle_down",
         // "enemies/bat/walk_down", v.v. Nếu kẻ địch chỉ có animation chung (không phân hướng),
         // AnimationSystem sẽ fallback sang key "{atlasKey}/{type}" (sau khi ta cập nhật nó).
@@ -210,6 +215,15 @@ public class TiledAshleyConfigurator {
         addEntityAnimation(tile, entity);
         entity.add(new Facing(FacingDirection.DOWN));
         entity.add(new Fsm(entity));
+
+        // Chỉ Player (controller=true) mới có máu và có thể bị tấn công
+        // Các tile object khác (cây, vật trang trí, NPC tĩnh...) KHÔNG gắn Health/Damageable
+        if (isController) {
+            entity.add(new Player());  // Tag để phân biệt với tile object khác
+            entity.add(new Health(com.github.zen05.lunarsaga.ai.PlayerDef.MAX_HP));
+            entity.add(new Damageable(com.github.zen05.lunarsaga.ai.PlayerDef.IFRAME_DURATION));
+            entity.add(new com.github.zen05.lunarsaga.component.PlayerFsm(entity));
+        }
 
         this.engine.addEntity(entity);
     }

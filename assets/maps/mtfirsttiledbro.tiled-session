@@ -3,11 +3,11 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "main.tmx",
+    "activeFile": "main_2.tmx",
     "expandedProjectPaths": [
+        "overw",
         "overw/object",
-        ".",
-        "overw"
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -29,8 +29,8 @@
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 252.75,
-                "y": 133
+                "x": 269.5,
+                "y": 175.75
             }
         },
         "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx#overworld": {
@@ -41,15 +41,15 @@
         },
         "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx": {
             "expandedObjectLayers": [
-                6,
                 9,
+                6,
                 7
             ],
             "scale": 2,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 277.75,
-                "y": 137.5
+                "x": 307.25,
+                "y": 175.75
             }
         },
         "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx#overworld-edit": {
@@ -63,8 +63,8 @@
             "scale": 1.5,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 355.6666666666667,
-                "y": 286.6666666666667
+                "x": 392.66666666666663,
+                "y": 255.66666666666666
             }
         },
         "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx#cave": {
@@ -75,23 +75,23 @@
         },
         "main.tmx": {
             "expandedObjectLayers": [
-                4,
+                5,
                 7,
-                5
+                4
             ],
-            "scale": 11,
-            "selectedLayer": 4,
+            "scale": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 226.3181818181818,
-                "y": 147.9090909090909
+                "x": 233.25,
+                "y": 169.5
             }
         },
         "main_2.tmx": {
-            "scale": 2,
-            "selectedLayer": 0,
+            "scale": 4,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 286.75,
-                "y": 202
+                "x": 245.375,
+                "y": 188.75
             }
         },
         "main_2.tmx#overworld-edit": {
@@ -146,13 +146,13 @@
     "project": "mtfirsttiledbro.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "main.tmx",
         "E:/Unity/GameDown/legend-of-lua-main/maps/testCave.tmx",
         "E:/Unity/GameDown/legend-of-lua-main/maps/test2.tmx",
         "tiled0.tsx",
         "object.tsx",
         "E:/Unity/GameDown/legend-of-lua-main/maps/test.tmx",
         "main_2.tmx",
-        "main.tmx",
         "tiled_extruded.tsx",
         "E:/Unity/GameDown/legend-of-lua-main/maps/menu.tmx",
         "overw/tiled_extruded.tsx",

@@ -4,20 +4,48 @@ size: 512, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-enemies/bat/bat
+enemies/alert
   rotate: false
-  xy: 86, 183
-  size: 16, 16
-  orig: 16, 16
+  xy: 126, 189
+  size: 8, 10
+  orig: 8, 10
   offset: 0, 0
-  index: 0
+  index: -1
 enemies/bat/bat
   rotate: false
   xy: 2, 11
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
+  index: 0
+enemies/bat/bat
+  rotate: false
+  xy: 106, 183
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
   index: 1
+enemies/bat/batDead
+  rotate: false
+  xy: 86, 183
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+enemies/bat/batDeadShadow
+  rotate: false
+  xy: 2, 2
+  size: 16, 5
+  orig: 16, 5
+  offset: 0, 0
+  index: -1
+enemies/bat/batShadow
+  rotate: false
+  xy: 498, 246
+  size: 12, 5
+  orig: 12, 5
+  offset: 0, 0
+  index: -1
 house/house
   rotate: false
   xy: 2, 171
@@ -363,14 +391,14 @@ water_tower/watertoweranim2
   index: -1
 weapons/arrow
   rotate: false
-  xy: 2, 2
+  xy: 90, 66
   size: 13, 5
   orig: 13, 5
   offset: 0, 0
   index: -1
 weapons/bow
   rotate: false
-  xy: 498, 238
+  xy: 22, 14
   size: 6, 13
   orig: 6, 13
   offset: 0, 0

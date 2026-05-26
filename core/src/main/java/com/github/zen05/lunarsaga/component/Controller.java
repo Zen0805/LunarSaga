@@ -19,6 +19,9 @@ public class Controller implements Component {
     private boolean pendingShoot;
     private final Vector2 shootOrigin;
 
+    /** Thời gian giữ chuột (giây). Tăng dần khi isAiming=true, reset về 0 sau khi bắn. */
+    private float chargeTime;
+
     public Controller() {
         this.pressedCommands = new ArrayList<>();
         this.releasedCommands = new ArrayList<>();
@@ -26,6 +29,7 @@ public class Controller implements Component {
         this.isAiming = false;
         this.pendingShoot = false;
         this.shootOrigin = new Vector2();
+        this.chargeTime = 0f;
     }
 
     public List<Command> getPressedCommands() {
@@ -58,5 +62,17 @@ public class Controller implements Component {
 
     public Vector2 getShootOrigin() {
         return shootOrigin;
+    }
+
+    public float getChargeTime() {
+        return chargeTime;
+    }
+
+    public void addChargeTime(float delta) {
+        this.chargeTime += delta;
+    }
+
+    public void resetChargeTime() {
+        this.chargeTime = 0f;
     }
 }

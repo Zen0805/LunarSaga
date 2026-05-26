@@ -99,6 +99,12 @@ public class PhysicSystem extends IteratingSystem implements EntityListener {
             Physic physic = Physic.MAPPER.get(entity);
             if (move == null || physic == null) continue;
 
+            // Nếu đang trong knockback window → bỏ qua velocity để body trượt tự do
+            // theo lực Impulse đã áp dụng từ ContactListener
+            com.github.zen05.lunarsaga.component.Damageable damageable =
+                    com.github.zen05.lunarsaga.component.Damageable.MAPPER.get(entity);
+            if (damageable != null && damageable.isKnockbackActive()) continue;
+
             Body body = physic.getBody();
             if (move.isRooted() || move.getDirection().isZero()) {
                 body.setLinearVelocity(0f, 0f);

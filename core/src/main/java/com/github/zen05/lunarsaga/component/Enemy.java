@@ -20,8 +20,13 @@ public class Enemy implements Component {
     private final float leashRange; // 8f — dây xích tối đa khi đang đuổi
 
     // ─── Timer nội bộ ─────────────────────────────────────────────────────────
-    private float timer = 0f;
+    private float timer      = 0f;
     private float targetTime = 0f;
+
+    // ─── Alert Timer (hiện dấu "!" khi vừa phát hiện Player) ─────────────────
+    /** Đếm ngược từ ALERT_DURATION → 0. RenderSystem chỉ vẽ "!" khi > 0. */
+    private float alertTimer = 0f;
+    public static final float ALERT_DURATION = 0.8f; // giây, giống Legend of Lua
 
     public Enemy(String enemyId,
             float wanderRadius, float aggroRange,
@@ -82,5 +87,22 @@ public class Enemy implements Component {
     public void resetTimer(float targetTime) {
         this.timer = 0f;
         this.targetTime = targetTime;
+    }
+
+    // ─── Alert Timer ──────────────────────────────────────────────────────────
+
+    /** Gọi khi bắt đầu CHASE để kích hoạt hiệu ứng "!". */
+    public void startAlert() {
+        this.alertTimer = ALERT_DURATION;
+    }
+
+    /** Gọi mỗi frame để đếm ngược. Tự dừng ở 0 (không âm). */
+    public void tickAlert(float delta) {
+        if (alertTimer > 0f) alertTimer = Math.max(0f, alertTimer - delta);
+    }
+
+    /** RenderSystem dùng cái này để quyết định có vẽ "!" không. */
+    public boolean isAlertVisible() {
+        return alertTimer > 0f;
     }
 }

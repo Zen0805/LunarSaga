@@ -47,6 +47,7 @@ public class EnemyAISystem extends IteratingSystem {
         EnemyState state   = enemyFsm.getStateMachine().getCurrentState();
 
         enemy.addTimer(deltaTime);
+        enemy.tickAlert(deltaTime); // Đếm ngược alert mỗi frame
 
         // Lấy vị trí hiện tại của quái
         Vector2 enemyPos = Physic.MAPPER.get(entity).getBody().getPosition();
@@ -158,6 +159,8 @@ public class EnemyAISystem extends IteratingSystem {
     }
 
     private void startChase(Entity entity, Enemy enemy, EnemyFsm enemyFsm) {
+        // Kích hoạt "!" trên đầu quái: hiện 0.8 giây rồi tự tắt
+        enemy.startAlert();
         // Reset timer (không dùng cho CHASE, nhưng giữ sạch cho state tiếp theo)
         enemy.resetTimer(0f);
         enemyFsm.getStateMachine().changeState(EnemyState.CHASE);

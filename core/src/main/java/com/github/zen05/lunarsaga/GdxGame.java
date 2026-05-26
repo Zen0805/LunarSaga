@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.zen05.lunarsaga.asset.AssetService;
+import com.github.zen05.lunarsaga.screen.GameOverScreen;
 import com.github.zen05.lunarsaga.screen.LoadingScreen;
 
 import java.util.HashMap;
@@ -53,6 +54,7 @@ public class GdxGame extends Game {
         this.fpsLogger = new FPSLogger();
 
         addScreen(new LoadingScreen(this, assetService));
+        addScreen(new GameOverScreen(this));
         setScreen(LoadingScreen.class);
 
     }
@@ -72,9 +74,18 @@ public class GdxGame extends Game {
     }
 
     public void removeScreen(Screen screen) {
-
         screenCache.remove(screen.getClass());
+    }
 
+    /** Xoá màn hình đang active (dùng khi GameOverScreen cần dọn dẹp GameScreen cũ). */
+    public void removeScreen(Class<? extends Screen> screenClass) {
+        Screen s = screenCache.remove(screenClass);
+        if (s != null) s.dispose();
+    }
+
+    /** Trả về Screen đang hiển thị (dùng để lấy class khi cần removeScreen). */
+    public Screen getActiveScreen() {
+        return super.getScreen();
     }
 
     public void setScreen(Class<? extends Screen> screenClass) {

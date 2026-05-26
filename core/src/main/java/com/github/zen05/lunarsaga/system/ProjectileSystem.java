@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.github.zen05.lunarsaga.GdxGame;
+import com.github.zen05.lunarsaga.ai.PlayerDef;
 import com.github.zen05.lunarsaga.asset.AssetService;
 import com.github.zen05.lunarsaga.asset.AtlasAsset;
 import com.github.zen05.lunarsaga.component.*;
@@ -21,8 +22,7 @@ import java.util.List;
 
 public class ProjectileSystem extends IteratingSystem {
 
-    private static final float ARROW_SPEED = 7f;
-    private static final float ARROW_LIFETIME = 3f;
+    private static final float ARROW_LIFETIME = 4f; // Tối đa 4 giây trước khi biến mất
 
     private final TextureRegion arrowRegion;
     private final List<Entity> deadEntities = new ArrayList<>();
@@ -46,14 +46,15 @@ public class ProjectileSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         Projectile projectile = Projectile.MAPPER.get(entity);
-        projectile.decLifetime(deltaTime);
-
-        if (projectile.isDead()) {
+        
+        // Cập nhật logic bay (z thay đổi theo parabol, trả về true nếu z <= 0)
+        boolean shouldDie = projectile.updateLogic(deltaTime);
+        if (shouldDie) {
             deadEntities.add(entity);
             return;
         }
 
-        // Di chuyển mũi tên theo hướng cố định của nó
+        // Di chuyển ngang luôn đều đặn từ đầu đến cuối
         Move move = Move.MAPPER.get(entity);
         move.getDirection().set(projectile.getDirection());
     }
@@ -65,19 +66,21 @@ public class ProjectileSystem extends IteratingSystem {
             for (Entity entity : controllerEntities) {
                 Controller controller = Controller.MAPPER.get(entity);
                 if (controller.isPendingShoot()) {
+                    float chargeTime = controller.getChargeTime();
                     spawnArrow(
                             controller.getShootOrigin().x,
                             controller.getShootOrigin().y,
-                            controller.getAimTarget()
+                            controller.getAimTarget(),
+                            chargeTime
                     );
                     controller.setPendingShoot(false);
+                    controller.resetChargeTime(); // Reset sau khi bắn
                 }
             }
         }
 
         super.update(deltaTime);
 
-        // Xoá các entity đã hết hạn ngoài vòng lặp
         Engine engine = getEngine();
         for (Entity dead : deadEntities) {
             engine.removeEntity(dead);
@@ -86,26 +89,31 @@ public class ProjectileSystem extends IteratingSystem {
     }
 
     /**
-     * Tạo một entity mũi tên tại vị trí spawnX/spawnY bay về hướng aimTarget.
-     * Tham khảo spawnArrow() trong legend-of-lua-main/src/items/arrow.lua:
-     *   direction = toMouseVector(x, y)
-     *   arrow.speed = 230
-     *   arrow.rot = math.atan2(direction.y, direction.x)
+     * Tạo một entity mũi tên. 
+     * Tốc độ, sát thương và THỜI GIAN BAY (tầm xa) được tính dựa vào chargeTime.
      */
-    public void spawnArrow(float spawnX, float spawnY, Vector2 aimTarget) {
+    public void spawnArrow(float spawnX, float spawnY, Vector2 aimTarget, float chargeTime) {
         if (arrowRegion == null) return;
 
-        // Hướng từ điểm spawn đến chuột
-        Vector2 direction = new Vector2(aimTarget.x - spawnX, aimTarget.y - spawnY).nor();
+        // ── 1. Tính tỉ lệ tụ lực (0.0 → 1.0) ────────────────────────────────
+        float chargeRatio = MathUtils.clamp(chargeTime / PlayerDef.CHARGE_MAX_TIME, 0f, 1f);
 
-        // Góc xoay của mũi tên (giống math.atan2 trong Lua)
+        // ── 2. Tốc độ, sát thương, tầm xa nội suy theo tỉ lệ charge ─────────
+        float speed    = MathUtils.lerp(PlayerDef.ARROW_SPEED_MIN, PlayerDef.ARROW_SPEED_MAX, chargeRatio);
+        int   damage   = Math.round(MathUtils.lerp(PlayerDef.ARROW_DAMAGE_MIN, PlayerDef.ARROW_DAMAGE_MAX, chargeRatio));
+        
+        // Thời gian bay (lifetime). Kết hợp với speed sẽ ra tầm xa của mũi tên.
+        float lifetime = MathUtils.lerp(PlayerDef.ARROW_LIFETIME_MIN, PlayerDef.ARROW_LIFETIME_MAX, chargeRatio); 
+
+        // ── 3. Hướng bay ─────────────────────────────────────────────────────
+        Vector2 direction = new Vector2(aimTarget.x - spawnX, aimTarget.y - spawnY).nor();
         float angleRad = MathUtils.atan2(direction.y, direction.x);
         float angleDeg = angleRad * MathUtils.radiansToDegrees;
 
-        float arrowW = arrowRegion.getRegionWidth() * GdxGame.UNIT_SCALE;
+        float arrowW = arrowRegion.getRegionWidth()  * GdxGame.UNIT_SCALE;
         float arrowH = arrowRegion.getRegionHeight() * GdxGame.UNIT_SCALE;
 
-        // Tạo Transform tại vị trí spawn
+        // ── 4. Tạo Transform & Components ────────────────────────────────────
         Transform transform = new Transform(
                 new Vector2(spawnX - arrowW * 0.5f, spawnY - arrowH * 0.5f),
                 1,
@@ -114,28 +122,31 @@ public class ProjectileSystem extends IteratingSystem {
                 angleDeg
         );
 
-        Move move = new Move(ARROW_SPEED);
+        Move move = new Move(speed);
         move.getDirection().set(direction);
 
-        Projectile projectile = new Projectile(ARROW_LIFETIME, direction);
+        Projectile projectile = new Projectile(
+                lifetime, direction, damage, PlayerDef.ARROW_INITIAL_Z
+        );
         Graphic graphic = new Graphic(arrowRegion, Color.WHITE.cpy());
 
-        // Tạo Body vật lý cho mũi tên
+        // ── 5. Body Box2D ─────────────────────────────────────────────────────
         com.badlogic.gdx.physics.box2d.BodyDef bodyDef = new com.badlogic.gdx.physics.box2d.BodyDef();
         bodyDef.type = com.badlogic.gdx.physics.box2d.BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(transform.getPosition());
         bodyDef.fixedRotation = true;
 
         com.badlogic.gdx.physics.box2d.Body body = physicWorld.createBody(bodyDef);
-        
+
         com.badlogic.gdx.physics.box2d.PolygonShape shape = new com.badlogic.gdx.physics.box2d.PolygonShape();
         float halfW = arrowW * 0.5f;
         float halfH = arrowH * 0.5f;
-        shape.setAsBox(halfW, halfH, new Vector2(halfW, halfH), 0f);
+        // Xoay hitbox (PolygonShape) khớp với góc của mũi tên thay vì nằm ngang cố định
+        shape.setAsBox(halfW, halfH, new Vector2(halfW, halfH), angleRad);
 
         com.badlogic.gdx.physics.box2d.FixtureDef fixtureDef = new com.badlogic.gdx.physics.box2d.FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.isSensor = true; // Là Sensor để không đẩy Player ra, chỉ dùng phát hiện va chạm
+        fixtureDef.isSensor = true;
         body.createFixture(fixtureDef).setUserData("arrow");
         shape.dispose();
 
@@ -146,7 +157,7 @@ public class ProjectileSystem extends IteratingSystem {
         arrow.add(move);
         arrow.add(projectile);
         arrow.add(graphic);
-        arrow.add(new Physic(body)); // Gắn Physic để PhysicSystem xử lý di chuyển
+        arrow.add(new Physic(body));
 
         getEngine().addEntity(arrow);
     }

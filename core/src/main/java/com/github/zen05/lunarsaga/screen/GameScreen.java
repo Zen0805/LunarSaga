@@ -65,8 +65,112 @@ public class GameScreen extends ScreenAdapter {
                 Object dataB = contact.getFixtureB().getBody().getUserData();
 
                 if (dataA instanceof Entity entityA && dataB instanceof Entity entityB) {
+                    // Kiểm tra va chạm cổng truyền tải
                     checkPortalCollision(entityA, entityB);
                     checkPortalCollision(entityB, entityA);
+
+                    // Kiểm tra va chạm Mũi tên → Kẻ địch
+                    checkArrowEnemyCollision(entityA, entityB, contact);
+                    checkArrowEnemyCollision(entityB, entityA, contact);
+
+                    // Kiểm tra va chạm Kẻ địch → Player
+                    checkEnemyPlayerCollision(entityA, entityB);
+                    checkEnemyPlayerCollision(entityB, entityA);
+                }
+            }
+
+            /** Xử lý khi Arrow bắn trúng Enemy: trừ máu, knockback, xóa mũi tên. */
+            private void checkArrowEnemyCollision(Entity maybeArrow, Entity maybeEnemy, Contact contact) {
+                // Điều kiện: entityA có Projectile, entityB có Health + Damageable + Physic
+                if (!com.github.zen05.lunarsaga.component.Projectile.MAPPER.has(maybeArrow)) return;
+                if (!com.github.zen05.lunarsaga.component.Health.MAPPER.has(maybeEnemy))     return;
+                if (!com.github.zen05.lunarsaga.component.Damageable.MAPPER.has(maybeEnemy)) return;
+                // Mũi tên KHÔNG tự bắn vào Player — bỏ qua nếu entity trúng là Player (có Controller)
+                if (Controller.MAPPER.has(maybeEnemy)) return;
+
+                com.github.zen05.lunarsaga.component.Damageable damageable =
+                        com.github.zen05.lunarsaga.component.Damageable.MAPPER.get(maybeEnemy);
+
+                // Bỏ qua nếu enemy đang trong iFrames (tránh bắn 1 mũi tên mà trừ nhiều lần)
+                if (damageable.isInvulnerable()) return;
+
+                com.github.zen05.lunarsaga.component.Projectile projectile =
+                        com.github.zen05.lunarsaga.component.Projectile.MAPPER.get(maybeArrow);
+
+                // ── Trừ máu theo sát thương của mũi tên (tụ lực mạnh damage to) ─
+                com.github.zen05.lunarsaga.component.Health health =
+                        com.github.zen05.lunarsaga.component.Health.MAPPER.get(maybeEnemy);
+                int damageAmount = (projectile != null) ? projectile.getDamage() : 1;
+                health.takeDamage(damageAmount);
+
+                // ── Kích hoạt iFrames ─────────────────────────────────────────
+                damageable.triggerInvulnerability();
+
+                // ── Knockback: đẩy quái ngược chiều mũi tên bay ──────────────
+                com.github.zen05.lunarsaga.component.Physic enemyPhysic =
+                        com.github.zen05.lunarsaga.component.Physic.MAPPER.get(maybeEnemy);
+
+                if (enemyPhysic != null && projectile != null) {
+                    com.badlogic.gdx.math.Vector2 knockDir = new com.badlogic.gdx.math.Vector2(
+                            projectile.getDirection()).nor();
+                    float impulse = com.github.zen05.lunarsaga.component.Damageable.KNOCKBACK_IMPULSE;
+                    enemyPhysic.getBody().applyLinearImpulse(
+                            knockDir.x * impulse,
+                            knockDir.y * impulse,
+                            enemyPhysic.getBody().getWorldCenter().x,
+                            enemyPhysic.getBody().getWorldCenter().y,
+                            true
+                    );
+                }
+
+                // ── Đánh dấu mũi tên đã "chết" → ProjectileSystem sẽ dọn dẹp ─
+                com.github.zen05.lunarsaga.component.Projectile p =
+                        com.github.zen05.lunarsaga.component.Projectile.MAPPER.get(maybeArrow);
+                if (p != null) p.kill(); // lifetime = 0 → ProjectileSystem xóa ngay frame sau
+            }
+
+            /** Xử lý khi Enemy chạm Player: trừ máu Player, knockback, iFrames. */
+            private void checkEnemyPlayerCollision(Entity maybeEnemy, Entity maybePlayer) {
+                // Điều kiện: enemy có Enemy component, player có Controller + Health + Damageable
+                if (!com.github.zen05.lunarsaga.component.Enemy.MAPPER.has(maybeEnemy))      return;
+                if (!Controller.MAPPER.has(maybePlayer))                                      return;
+                if (!com.github.zen05.lunarsaga.component.Health.MAPPER.has(maybePlayer))    return;
+                if (!com.github.zen05.lunarsaga.component.Damageable.MAPPER.has(maybePlayer)) return;
+
+                com.github.zen05.lunarsaga.component.Damageable damageable =
+                        com.github.zen05.lunarsaga.component.Damageable.MAPPER.get(maybePlayer);
+
+                // Bỏ qua nếu Player đang trong iFrames
+                if (damageable.isInvulnerable()) return;
+
+                // ── Trừ máu Player (1 damage / lần chạm) ────────────────────
+                com.github.zen05.lunarsaga.component.Health health =
+                        com.github.zen05.lunarsaga.component.Health.MAPPER.get(maybePlayer);
+                health.takeDamage(1);
+                com.badlogic.gdx.Gdx.app.log("Combat",
+                        "Player bị đánh! HP còn lại: " + health.getCurrentHp() + "/" + health.getMaxHp());
+
+                // ── Kích hoạt iFrames ─────────────────────────────────────────
+                damageable.triggerInvulnerability();
+
+                // ── Knockback: đẩy Player ngược chiều so với Enemy ───────────
+                com.github.zen05.lunarsaga.component.Physic playerPhysic =
+                        com.github.zen05.lunarsaga.component.Physic.MAPPER.get(maybePlayer);
+                com.github.zen05.lunarsaga.component.Physic enemyPhysic =
+                        com.github.zen05.lunarsaga.component.Physic.MAPPER.get(maybeEnemy);
+
+                if (playerPhysic != null && enemyPhysic != null) {
+                    // Hướng knockback = từ enemy → player
+                    com.badlogic.gdx.math.Vector2 knockDir = new com.badlogic.gdx.math.Vector2(
+                            playerPhysic.getBody().getPosition()).sub(enemyPhysic.getBody().getPosition()).nor();
+                    float impulse = com.github.zen05.lunarsaga.component.Damageable.KNOCKBACK_IMPULSE;
+                    playerPhysic.getBody().applyLinearImpulse(
+                            knockDir.x * impulse,
+                            knockDir.y * impulse,
+                            playerPhysic.getBody().getWorldCenter().x,
+                            playerPhysic.getBody().getWorldCenter().y,
+                            true
+                    );
                 }
             }
 
@@ -89,6 +193,8 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new FsmSystem());
         this.engine.addSystem(new EnemyAISystem());   // Tính toán AI (timer, random hướng)
         this.engine.addSystem(new EnemyFsmSystem());  // Tick FSM sau khi AI đã cập nhật
+        this.engine.addSystem(new DamageSystem(game));    // Tick iFrames, flash, xóa kẻ địch chết
+        this.engine.addSystem(new PlayerFsmSystem(game)); // Xử lý Player chết, đợi chuyển màn hình
 
         this.engine.addSystem(new FacingSystem());
         this.engine.addSystem(new AnimationSystem(game.getAssetService()));
@@ -96,6 +202,7 @@ public class GameScreen extends ScreenAdapter {
         this.engine.addSystem(new CameraSystem(game.getCamera())); // Thêm hệ thống Camera
         this.engine.addSystem(
                 new RenderSystem(game.getBatch(), game.getViewport(), game.getCamera(), game.getAssetService()));
+        this.engine.addSystem(new HudSystem(game.getViewport())); // HP Bar — vẽ sau cùng lên trên hết
     }
 
     @Override

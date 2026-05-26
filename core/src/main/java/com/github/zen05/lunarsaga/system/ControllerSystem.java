@@ -3,8 +3,10 @@ package com.github.zen05.lunarsaga.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.github.zen05.lunarsaga.ai.PlayerState;
 import com.github.zen05.lunarsaga.component.Controller;
 import com.github.zen05.lunarsaga.component.Move;
+import com.github.zen05.lunarsaga.component.PlayerFsm;
 import com.github.zen05.lunarsaga.input.Command;
 
 public class ControllerSystem extends IteratingSystem {
@@ -18,7 +20,19 @@ public class ControllerSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
+        // Nếu Player đang DEAD thì bỏ qua input
+        PlayerFsm fsm = PlayerFsm.MAPPER.get(entity);
+        if (fsm != null && fsm.getStateMachine().isInState(PlayerState.DEAD)) {
+            return;
+        }
+
         Controller controller = Controller.MAPPER.get(entity);
+
+        // Tích lũy thời gian giữ chuột khi đang aim (nhấn và giữ)
+        if (controller.isAiming()) {
+            controller.addChargeTime(deltaTime);
+        }
+
         if (controller.getPressedCommands().isEmpty() && controller.getReleasedCommands().isEmpty()) {
             return;
         }

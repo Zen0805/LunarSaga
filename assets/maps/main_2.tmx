@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="2025.12.08" orientation="orthogonal" renderorder="right-down" width="38" height="22" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="14">
+<map version="1.10" tiledversion="2025.12.08" orientation="orthogonal" renderorder="right-down" width="38" height="22" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="16">
  <tileset firstgid="1" source="tiled0.tsx"/>
  <tileset firstgid="1441" source="tiled_extruded.tsx"/>
  <layer id="1" name="Base" width="38" height="22">
@@ -14,6 +14,22 @@
  </layer>
  <objectgroup id="5" name="Enemies">
   <object id="13" name="test" x="234" y="174">
+   <properties>
+    <property name="ai" value="idle"/>
+    <property name="enemyId" value="bat"/>
+    <property name="type" value="enemy"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="14" name="test" x="209.25" y="213">
+   <properties>
+    <property name="ai" value="idle"/>
+    <property name="enemyId" value="bat"/>
+    <property name="type" value="enemy"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="15" name="test" x="193.5" y="168.5">
    <properties>
     <property name="ai" value="idle"/>
     <property name="enemyId" value="bat"/>

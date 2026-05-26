@@ -20,8 +20,11 @@ import com.github.zen05.lunarsaga.GdxGame;
 import com.github.zen05.lunarsaga.asset.AssetService;
 import com.github.zen05.lunarsaga.asset.AtlasAsset;
 import com.github.zen05.lunarsaga.component.Controller;
+import com.github.zen05.lunarsaga.component.Enemy;
+import com.github.zen05.lunarsaga.component.EnemyFsm;
 import com.github.zen05.lunarsaga.component.Facing;
 import com.github.zen05.lunarsaga.component.Graphic;
+import com.github.zen05.lunarsaga.component.Projectile;
 import com.github.zen05.lunarsaga.component.Transform;
 
 import java.util.ArrayList;
@@ -37,9 +40,15 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
     private final List<MapLayer> forceGroundLayers;
     private final List<MapLayer> backGroundLayers;
     private final TextureRegion bowRegion;
+    private final TextureRegion shadowRegion;    // enemies/bat/batShadow
+    private final TextureRegion alertRegion;     // enemies/alert
 
     // Offset của cây cung tính từ tâm nhân vật (đơn vị thế giới)
-    private static final float BOW_OFFSET = 0.25f;
+    private static final float BOW_OFFSET   = 0.25f;
+    // Offset vẽ bóng: căn giữa theo X, dịch xuống dưới chân sprite
+    private static final float SHADOW_Y_OFFSET = -0.05f;
+    // Offset vẽ alert: bên trên đỉnh đầu sprite
+    private static final float ALERT_Y_OFFSET  =  0.12f;
 
     public RenderSystem(Batch batch, Viewport viewport, OrthographicCamera camera, AssetService assetService) {
 
@@ -56,7 +65,9 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         this.backGroundLayers = new ArrayList<>();
 
         TextureAtlas atlas = assetService.get(AtlasAsset.OBJECTS);
-        this.bowRegion = atlas.findRegion("weapons/bow");
+        this.bowRegion    = atlas.findRegion("weapons/bow");
+        this.shadowRegion = atlas.findRegion("enemies/bat/batShadow");
+        this.alertRegion  = atlas.findRegion("enemies/alert");
 
     }
 
@@ -94,23 +105,70 @@ public class RenderSystem extends SortedIteratingSystem implements Disposable {
         Vector2 position = transform.getPosition();
         Vector2 scaling = transform.getScaling();
         Vector2 size = transform.getSize();
-        
+
+        // ── 1. Vẽ Bóng (Shadow) — phải vẽ TRƯỚC sprite chính để bị đè lên ──────
+        EnemyFsm enemyFsm = EnemyFsm.MAPPER.get(entity);
+        if (enemyFsm != null && shadowRegion != null) {
+            float shadowW = shadowRegion.getRegionWidth()  * GdxGame.UNIT_SCALE;
+            float shadowH = shadowRegion.getRegionHeight() * GdxGame.UNIT_SCALE;
+            float shadowX = position.x + (size.x - shadowW) * 0.5f;
+            float shadowY = position.y + SHADOW_Y_OFFSET;
+            // Shadow luôn alpha 0.5f cố định — không bị ảnh hưởng bởi flash effect
+            this.batch.setColor(1f, 1f, 1f, 0.5f);
+            this.batch.draw(shadowRegion, shadowX, shadowY, shadowW, shadowH);
+        }
+
+        // ── 2. Vẽ Sprite chính ───────────────────────────────────────────────────
+        // graphic.getColor() đã được DamageSystem cập nhật alpha (iFrames flash effect)
         float renderScaleX = scaling.x;
         Facing facing = Facing.MAPPER.get(entity);
         if (facing != null && facing.isFlipX()) {
             renderScaleX = -scaling.x;
         }
 
+        // ── Fake 3D Z-Axis cho mũi tên ────────────────────────────────────────
+        // Mũi tên có Projectile component → vẽ shadow ở Y thực, sprite ở Y+z
+        Projectile projectile = Projectile.MAPPER.get(entity);
+        float renderOffsetY = 0f;
+        if (projectile != null && projectile.getZ() > 0f) {
+            // Vẽ bóng (hình mũi tên mờ) tại Y thực
+            this.batch.setColor(0f, 0f, 0f, 0.35f);
+            this.batch.draw(
+                    graphic.getRegion(),
+                    position.x - (1f - scaling.x) * size.x * 0.5f,
+                    position.y - (1f - scaling.y) * size.y * 0.5f,
+                    size.x * 0.5f, size.y * 0.5f,
+                    size.x, size.y,
+                    renderScaleX, scaling.y,
+                    transform.getRotationDegrees());
+            // Sprite thực vẽ cao hơn bóng một lượng z (chuyển từ world units sang pixel-ish)
+            renderOffsetY = projectile.getZ();
+        }
+
         this.batch.setColor(graphic.getColor());
         this.batch.draw(
                 graphic.getRegion(),
                 position.x - (1f - scaling.x) * size.x * 0.5f,
-                position.y - (1f - scaling.y) * size.y * 0.5f,
+                position.y - (1f - scaling.y) * size.y * 0.5f + renderOffsetY,
                 size.x * 0.5f, size.y * 0.5f,
                 size.x, size.y,
                 renderScaleX, scaling.y,
                 transform.getRotationDegrees());
 
+        // ── 3. Vẽ Alert (!) — hiện 0.8s khi vừa phát hiện Player (giống Legend of Lua) ──
+        if (alertRegion != null) {
+            Enemy enemy = Enemy.MAPPER.get(entity);
+            if (enemy != null && enemy.isAlertVisible()) {
+                float alertW = alertRegion.getRegionWidth()  * GdxGame.UNIT_SCALE;
+                float alertH = alertRegion.getRegionHeight() * GdxGame.UNIT_SCALE;
+                float alertX = position.x + (size.x - alertW) * 0.5f;
+                float alertY = position.y + size.y + ALERT_Y_OFFSET;
+                this.batch.setColor(Color.WHITE); // Alert luôn full opacity
+                this.batch.draw(alertRegion, alertX, alertY, alertW, alertH);
+            }
+        }
+
+        // ── 4. Vẽ Cung (Bow) — chỉ cho Player ───────────────────────────────────
         Controller controller = Controller.MAPPER.get(entity);
         if (controller != null && controller.isAiming() && bowRegion != null) {
             drawBow(position, size, controller.getAimTarget());
